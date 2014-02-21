@@ -5,25 +5,25 @@ ship_address = @order.ship_address
 anonymous = @order.email =~ /@example.net$/
 
 
-bounding_box [0,600], :width => 540 do
-  move_down 2
-  data = [[Prawn::Table::Cell.new( :text => Spree.t(:billing_address), :font_style => :bold ),
-                Prawn::Table::Cell.new( :text => Spree.t(:shipping_address), :font_style => :bold )]]
+bounding_box [0,580], :width => 540 do
+  data = [ [ { :content => Spree.t(:billing_address), :font_style => :bold },
+                 { :content => Spree.t(:shipping_address), :font_style => :bold }]]
 
   table data,
     :position           => :center,
-    :border_width => 0.5,
-    :vertical_padding   => 2,
-    :horizontal_padding => 6,
-    :font_size => 9,
-    :border_style => :underline_header,
+    :cell_style => {
+      :border_width => 0,
+      :vertical_padding   => 2,
+      :horizontal_padding => 6,
+      :font_size => 9,
+      :border_style => :underline_header
+    },
     :column_widths => { 0 => 270, 1 => 270 }
 
   move_down 2
   horizontal_rule
 
   bounding_box [0,0], :width => 540 do
-    move_down 2
     if anonymous and Spree::Config[:suppress_anonymous_address]
       data2 = [[" "," "]] * 6
     else
@@ -41,10 +41,11 @@ bounding_box [0,600], :width => 540 do
 
     table data2,
       :position           => :center,
-      :border_width => 0.0,
-      :vertical_padding   => 0,
-      :horizontal_padding => 6,
-      :font_size => 9,
+      :cell_style => {
+        :border_width => 0.0,
+        :padding => [1, 5],
+        :font_size => 9
+      },
       :column_widths => { 0 => 270, 1 => 270 }
   end
 
